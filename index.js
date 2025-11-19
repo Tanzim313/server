@@ -81,6 +81,8 @@ async function run() {
               const data = req.body
               console.log(data)
 
+               data.price = parseFloat(data.price);
+
                const result = modelCollection.insertOne(data)
 
               res.send({
@@ -146,12 +148,25 @@ app.delete('/models/:id',async(req,res)=>{
 })
 
 
+app.get('/filter/:min-:max',async(req,res)=>{
+
+  const min = Number(req.params.min)
+  const max = Number(req.params.max)
+
+  const result = await modelCollection.find({
+    price: {$gte:min,$lte:max}
+  }).toArray();
+
+  res.send({
+    success: true,
+    result
+  });
+
+});
 
 
 
-
-
-    //booking...
+//booking...
 
 
     app.post('/booking',async(req,res)=>{
