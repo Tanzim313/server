@@ -46,10 +46,11 @@ async function run() {
 
 
     app.get('/models/:id',async(req,res) =>{
-          const id = req.params
+          const {id} = req.params
           console.log(id)
+          const objectId = new ObjectId(id)
 
-          const result = await modelCollection.findOne({_id: new ObjectId(id)})
+          const result = await modelCollection.findOne({_id: objectId})
 
           res.send({
             success:true,
@@ -91,6 +92,64 @@ async function run() {
 
     })
 
+//PUT
+//updatedOne
+//updateMany
+
+
+app.put('/models/:id',async(req,res)=>{
+        
+  const {id} = req.params
+  const data = req.body
+          console.log(id)
+          console.log(data)
+          const objectId = new ObjectId(id)
+          const filter = {_id:objectId}
+          
+          const update ={
+            $set:data
+          }
+
+          const result = await modelCollection.
+          updateOne(filter,update)
+
+
+          res.send({
+            success: true,
+            result
+          })
+
+
+
+})
+
+
+//delete
+//deleteOne
+//deleteMany
+
+
+app.delete('/models/:id',async(req,res)=>{
+  const {id} = req.params
+
+  const objectId = new ObjectId(id)
+  const filter = {_id:objectId}
+          
+
+  const result = await modelCollection.deleteOne(filter)
+
+  res.send({
+    success:true,
+    result
+
+  })
+})
+
+
+
+
+
+
 
     //booking...
 
@@ -130,6 +189,27 @@ async function run() {
       })
     })
 
+
+//delete
+//deleteOne
+//deleteMany
+
+
+app.delete('/booking/:id',async(req,res)=>{
+  const {id} = req.params
+
+  const objectId = new ObjectId(id)
+  const filter = {_id:objectId}
+          
+
+  const result = await modelCollection2.deleteOne(filter)
+
+  res.send({
+    success:true,
+    result
+    
+  })
+})
 
 
 
