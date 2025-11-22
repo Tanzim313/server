@@ -23,12 +23,13 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //await client.connect();
 
     const db = client.db('model-db')
     const modelCollection  = db.collection('models')
 
     const modelCollection2 = db.collection('booking')
+     const modelCollection3 = db.collection('reviews')
 
 
     //find
@@ -226,6 +227,51 @@ app.delete('/booking/:id',async(req,res)=>{
   })
 })
 
+//reviews...
+
+
+    app.post('/reviews',async(req,res)=>{
+
+              const data = req.body
+              console.log(data)
+
+               const result = await modelCollection3.insertOne(data)
+
+              res.send({
+                success: true,
+                result
+              })
+    })
+
+
+  app.get('/reviews',async(req,res)=>{
+
+    const result = await modelCollection3.find().toArray();
+    
+    console.log(result);
+    
+    res.send({
+      success:true,
+      result
+    });
+  })
+
+  app.get('/reviews/:serviceId',async(req,res)=>{
+
+        const serviceId = req.params.serviceId;
+
+        const reviews = await modelCollection3
+        .find({serviceId:serviceId})
+        .sort({date:-1})
+        .toArray();
+
+        console.log(reviews);
+
+        res.send({
+          success:true,
+          reviews
+        })
+  })
 
 
 
@@ -239,7 +285,7 @@ app.delete('/booking/:id',async(req,res)=>{
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    //await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
@@ -259,3 +305,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+
